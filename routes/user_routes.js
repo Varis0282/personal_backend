@@ -99,4 +99,28 @@ router.put('/change-password', privateResources, async (req, res) => {
     }
 });
 
+// get all courses without login
+router.get('/courses', async (req, res) => {
+    try {
+        const courses = await Course.find(); // assuming you have a Course model
+        res.status(200).json({ success: true, data: courses });
+    } catch (error) {
+        res.status(500).json({ message: error.message, success: false });
+    }
+});
+
+// get a particular course
+router.get('/courses/:id', async (req, res) => {
+    try {
+        const course = await Course.findById(req.params.id); // assuming you have a Course model
+        if (!course) {
+            return res.status(404).json({ message: "Course not found", success: false });
+        }
+
+        res.status(200).json({ success: true, data: course });
+    } catch (error) {
+        res.status(500).json({ message: error.message, success: false });
+    }
+});
+
 module.exports = router;
