@@ -5,8 +5,10 @@ const db = require('./dbconfig');
 const authRoutes = require('./routes/auth_route');
 const userRoutes = require('./routes/user_routes');
 const adminRoutes = require('./routes/admin_routes');
+const cors = require('cors');
 
 app.use(express.json());
+app.use(cors());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
