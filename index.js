@@ -16,13 +16,14 @@ app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/me', userRoutes);
 
+app.get('/', (req, res) => {
+    res.send('Hello World');
+});
+
 app.use('*', (req, res) => {
     res.status(404).json({ message: 'Api not found' });
 });
 
-app.get('/', (req, res) => {
-    res.send('Hello World');
-});
 
 mongoose.connect(Mongo_URI)
     .then(() => {
@@ -32,7 +33,7 @@ mongoose.connect(Mongo_URI)
                 console.log(`Server is running on ${port}`);
             });
         } catch (err) {
-            console.log('Error starting the server',err);
+            console.log('Error starting the server', err);
         }
     })
     .catch((err) => {
