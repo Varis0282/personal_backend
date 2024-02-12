@@ -69,6 +69,21 @@ const userSchema = new mongoose.Schema({
     lastLogin: {
         type: Date,
     },
+    college: {
+        type: String,
+    },
+    branch: {
+        type: String,
+    },
+    specialization: {
+        type: String,
+    },
+    passoutYear: {
+        type: String,
+    },
+    profilePic: {
+        type: String,
+    },
 });
 
 module.exports = mongoose.model('User', userSchema);
