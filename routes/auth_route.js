@@ -139,7 +139,7 @@ router.post('/verify-email', async (req, res) => {
         user.mailVerified = true;
         user.lastOTP = '';
         await user.save();
-        res.status(200).json({ message: 'Email verified successfully', success: true });
+        res.status(200).json({ message: 'Email verified successfully', success: true, user: user });
     } catch (error) {
         res.status(500).json({ message: error.message, success: false });
     }
