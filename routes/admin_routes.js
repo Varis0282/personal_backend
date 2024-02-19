@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require('../models/userModel');
 const adminResources = require('../middleware/privateResourcesAdmin');
 const Course = require('../models/courseModel');
+const Class = require('../models/classModel');
 
 
 // Users API
@@ -190,5 +191,34 @@ router.delete('/courses/:id', adminResources, async (req, res) => {
         });
     }
 });
+
+// add class in a class model by admin only and then save it's id in course model
+router.post('/courses/:id/class', adminResources, async (req, res) => {
+    const { course, timings, link, status, updatedBy, updateType } = req.body;
+    try {
+        const newClass = new Class({
+            course,
+            timings,
+            link,
+            status,
+            updatedBy,
+            updateType
+        });
+        await newClass.save();
+        const courseExists = await Course.findById(req.params.id);
+        courseExists.classes.push(newClass._id);
+        await courseExists.save();
+        res.status(201).json({
+            success: true,
+            data: newClass
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Server Error'
+        });
+    }
+});
+
 
 module.exports = router;

@@ -81,7 +81,7 @@ const userSchema = new mongoose.Schema({
     passoutYear: {
         type: String,
     },
-    doubts:[
+    doubts: [
         {
             question: {
                 type: String,
@@ -89,16 +89,22 @@ const userSchema = new mongoose.Schema({
             answer: {
                 type: String,
             },
+            requery: [
+                {
+                    type: String,
+                }
+            ],
             status: {
                 type: Enumerator,
                 enum: ['pending', 'answered', 'dismissed', 'answered but not satisfied', 'dismissed but not satisfied', 'resolved'],
-                default: 'pending'
+                default: 'pending',
+                required: true
             },
             createdAt: {
                 type: Date,
-                default: Date.now
+                default: Date.now,
             },
-            update:{
+            update: {
                 updatedAt: {
                     type: Date,
                 },
@@ -106,7 +112,7 @@ const userSchema = new mongoose.Schema({
                     type: mongoose.Schema.Types.ObjectId,
                     ref: 'User'
                 },
-                updateType:{
+                updateType: {
                     type: Enumerator,
                     enum: ['answered', 'dismissed', 'answered but not satisfied', 'dismissed but not satisfied', 'resolved'],
                 }
@@ -115,45 +121,14 @@ const userSchema = new mongoose.Schema({
     ],
     classes: [
         {
-            course:{
+            classId: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Class'
+            },
+            courseId: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'Course'
-            },
-            timings:{
-                days:[{
-                    type: Enumerator,
-                    enum: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
-                }],
-                from:{
-                    type: Date,
-                },
-                to:{
-                    type: Date,
-                }
-            },
-            link: {
-                type: String,
-            },
-            status: {
-                type: Enumerator,
-                enum: ['upcoming', 'live', 'completed'],
-                default: 'upcoming'
-            },
-            createdAt: {
-                type: Date,
-                default: Date.now
-            },
-            updatedAt: {
-                type: Date,
-            },
-            updatedBy: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'User'
-            },
-            updateType:{
-                type: Enumerator,
-                enum: ['live', 'completed'],
-            },
+            }
         }
     ],
     profilePic: {

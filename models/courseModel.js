@@ -39,6 +39,10 @@ const courseSchema = new mongoose.Schema({
             }
         }
     ],
+    classes: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Class'
+    }],
     content: [
         {
             title: {

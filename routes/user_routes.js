@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/userModel');
 const Course = require('../models/courseModel');
+const Class = require('../models/classModel');
 const bcrypt = require('bcrypt');
 const privateResources = require('../middleware/privateResources');
 
@@ -74,6 +75,13 @@ router.post('/enroll', privateResources, async (req, res) => {
             joinedAt: course.upcomingBatches[0].batchStartDate,
             expiredAt: course.upcomingBatches[0].batchEndDate
         });
+        // get the class id from course.classes and fetch the class details from Class model and add to user's classes
+        const classId = course.classes;
+        const classDetails = await Class.findById(classId);
+        user.classes.push({
+            courseId: course._id,
+            classId: classDetails._id,
+        });
         // add user to course's enrolledUsers and populate user's courses
         course.enrolledUsers.push({
             userId: user._id,
@@ -90,7 +98,7 @@ router.post('/enroll', privateResources, async (req, res) => {
 // get all courses enrolled by logged in user
 router.get('/courses', privateResources, async (req, res) => {
     try {
-        const user = await User.findById(req.user._id).populate('courses.id');
+        const user = await User.findById(req.user._id).populate('courses.id','classes.classId');
         res.status(200).json({ data: user.courses, success: true });
     } catch (error) {
         res.status(500).json({ message: error.message, success: false });
@@ -133,6 +141,68 @@ router.get('/courses/:id', async (req, res) => {
         }
 
         res.status(200).json({ success: true, data: course });
+    } catch (error) {
+        res.status(500).json({ message: error.message, success: false });
+    }
+});
+
+//ask a doubt and save it in user's doubts
+router.post('/doubt', privateResources, async (req, res) => {
+    try {
+        const { courseId, question } = req.body;
+        const user = await User.findById(req.user._id);
+        user.doubts.push({
+            courseId: courseId,
+            question: question,
+            status: 'pending',
+            createdAt: Date.now()
+        });
+        await user.save();
+        res.status(200).json({ message: 'Doubt asked successfully', success: true });
+    } catch (error) {
+        res.status(500).json({ message: error.message, success: false });
+    }
+});
+
+// get all doubts asked by logged in user
+router.get('/doubts', privateResources, async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id).populate('doubts.courseId');
+        res.status(200).json({ data: user.doubts, success: true });
+    } catch (error) {
+        res.status(500).json({ message: error.message, success: false });
+    }
+});
+
+// get all doubts asked by logged in user for a particular course
+router.get('/doubts/:courseId', privateResources, async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id).populate('doubts.courseId');
+        const doubts = user.doubts.filter(d => d.courseId === req.params.courseId);
+        res.status(200).json({ data: doubts, success: true });
+    } catch (error) {
+        res.status(500).json({ message: error.message, success: false });
+    }
+});
+
+// update a doubt status asked by logged in user
+router.put('/doubt/:doubtId', privateResources, async (req, res) => {
+    try {
+        const { requery, status, update } = req.body;
+        const user = await User.findById(req.user._id);
+        const doubt = user.doubts.id(req.params.doubtId);
+        if (!doubt) {
+            return res.status(404).json({ message: 'Doubt not found', success: false });
+        }
+        if (requery) {
+            doubt.requery = requery;
+        }
+        if (status) {
+            doubt.status = status;
+        }
+        doubt.update = update;
+        await user.save();
+        res.status(200).json({ message: 'Doubt updated successfully', success: true });
     } catch (error) {
         res.status(500).json({ message: error.message, success: false });
     }
