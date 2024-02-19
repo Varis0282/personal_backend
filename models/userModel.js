@@ -75,7 +75,10 @@ const userSchema = new mongoose.Schema({
     branch: {
         type: String,
     },
-    specialization: {
+    city:{
+        type: String,
+    },
+    course: {
         type: String,
     },
     passoutYear: {
@@ -133,7 +136,7 @@ const userSchema = new mongoose.Schema({
     ],
     profilePic: {
         type: String,
-    },
+    }
 });
 
 module.exports = mongoose.model('User', userSchema);
