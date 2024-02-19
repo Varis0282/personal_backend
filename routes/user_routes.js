@@ -20,7 +20,7 @@ router.get('/', privateResources, async (req, res) => {
 // update user info only by logged in user
 router.put('/update', privateResources, async (req, res) => {
     try {
-        const { name, email, phone, college, branch, passoutYear, course, profilePic } = req.body;
+        const { name, email, phone, city, college, branch, passoutYear, course, profilePic } = req.body;
         const user = await User.findById(req.user._id);
         if (name) {
             user.name = name;
@@ -45,6 +45,9 @@ router.put('/update', privateResources, async (req, res) => {
         }
         if (profilePic) {
             user.profilePic = profilePic;
+        }
+        if (city) {
+            user.city = city;
         }
         await user.save();
         res.status(200).json({ message: 'User updated successfully', success: true });
