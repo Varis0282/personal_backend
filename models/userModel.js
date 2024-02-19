@@ -113,7 +113,7 @@ const userSchema = new mongoose.Schema({
                     ref: 'User'
                 },
                 updateType: {
-                    type: Enumerator,
+                    type: String,
                     enum: ['answered', 'dismissed', 'answered but not satisfied', 'dismissed but not satisfied', 'resolved'],
                 }
             },
