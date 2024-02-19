@@ -95,7 +95,7 @@ const userSchema = new mongoose.Schema({
                 }
             ],
             status: {
-                type: Enumerator,
+                type: String,
                 enum: ['pending', 'answered', 'dismissed', 'answered but not satisfied', 'dismissed but not satisfied', 'resolved'],
                 default: 'pending',
                 required: true
