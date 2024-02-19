@@ -8,7 +8,7 @@ const classSchema = new mongoose.Schema({
     },
     timings: {
         days: [{
-            type: Enumerator,
+            type: String,
             enum: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
         }],
         from: {
@@ -22,7 +22,7 @@ const classSchema = new mongoose.Schema({
         type: String,
     },
     status: {
-        type: Enumerator,
+        type: String,
         enum: ['upcoming', 'live', 'completed'],
         default: 'upcoming'
     },
@@ -38,7 +38,7 @@ const classSchema = new mongoose.Schema({
         ref: 'User'
     },
     updateType: {
-        type: Enumerator,
+        type: String,
         enum: ['live', 'completed'],
     },
 });
