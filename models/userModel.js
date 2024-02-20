@@ -89,10 +89,19 @@ const userSchema = new mongoose.Schema({
             question: {
                 type: String,
             },
+            course:{
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Course'
+            },
             answer: {
                 type: String,
             },
             requery: [
+                {
+                    type: String,
+                }
+            ],
+            reanswer:[
                 {
                     type: String,
                 }
