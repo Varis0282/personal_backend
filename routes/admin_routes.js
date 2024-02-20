@@ -287,7 +287,7 @@ router.put('/class/:id', adminResources, async (req, res) => {
 // get all the doubts in all the users with their details
 router.get('/doubts', adminResources, async (req, res) => {
     try {
-        const users = await User.find().populate('doubts.courseId');
+        const users = await User.find().populate('doubts.course');
         res.status(200).json({ data: users, success: true });
     } catch (error) {
         res.status(500).json({ message: error.message, success: false });
