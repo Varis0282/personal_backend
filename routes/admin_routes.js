@@ -192,6 +192,8 @@ router.delete('/courses/:id', adminResources, async (req, res) => {
     }
 });
 
+// Class API
+
 // add class in a class model by admin only and then save it's id in course model
 router.post('/courses/:id/class', adminResources, async (req, res) => {
     const { course, timings, link, status, updatedBy, updateType } = req.body;
@@ -220,27 +222,24 @@ router.post('/courses/:id/class', adminResources, async (req, res) => {
     }
 });
 
-// get all classDetails of a course by course id
-router.get('/courses/:id/classes', adminResources, async (req, res) => {
+// get all classDetails of a course by course id from class model
+router.get('/courses/:id/class', adminResources, async (req, res) => {
     try {
-        const course = await Course.findById(req.params.id).populate('classes');
-        res.status(200).json({ data: course.classes, success: true });
+        const classes = await Class.find({ course: req.params.id })
+        res.status(200).json({ data: classes, success: true });
     } catch (error) {
         res.status(500).json({ message: error.message, success: false });
     }
 });
 
-// delete a class by admin only
-router.delete('/courses/:id/class/:classId', adminResources, async (req, res) => {
+// delete a class by admin only by class id
+router.delete('/class/:id', adminResources, async (req, res) => {
     try {
-        const course = await Course.findById(req.params.id);
-        if (!course) {
-            return res.status(404).json({ message: "Course not found", success: false });
-        }
-        const classExists = await Class.findById(req.params.classId);
+        const classExists = await Class.findById(req.params.id);
         if (!classExists) {
             return res.status(404).json({ message: "Class not found", success: false });
         }
+
         await classExists.remove();
         res.status(200).json({
             success: true,
@@ -254,14 +253,15 @@ router.delete('/courses/:id/class/:classId', adminResources, async (req, res) =>
     }
 });
 
-// update a class by admin only
-router.put('/courses/:id/class/:classId', adminResources, async (req, res) => {
+// update a class by admin only by class id
+router.put('/class/:id', adminResources, async (req, res) => {
     const { course, timings, link, status, updatedBy, updateType } = req.body;
     try {
-        const classExists = await Class.findById(req.params.classId);
+        const classExists = await Class.findById(req.params.id);
         if (!classExists) {
             return res.status(404).json({ message: "Class not found", success: false });
         }
+
         classExists.course = course || classExists.course;
         classExists.timings = timings || classExists.timings;
         classExists.link = link || classExists.link;
@@ -281,6 +281,8 @@ router.put('/courses/:id/class/:classId', adminResources, async (req, res) => {
         });
     }
 });
+
+// Doubts API
 
 // get all the doubts in all the users with their details
 router.get('/doubts', adminResources, async (req, res) => {

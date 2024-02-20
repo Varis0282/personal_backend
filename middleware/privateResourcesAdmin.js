@@ -3,7 +3,8 @@ const User = require('../models/userModel');
 
 module.exports = async (req, res, next) => {
     try {
-        const token = req.header('Authorization');
+        const headers = req.header('Authorization');
+        const token = headers.split(' ')[1];
         if (!token) {
             return res.status(401).json({ message: 'Unauthorized' });
         }
