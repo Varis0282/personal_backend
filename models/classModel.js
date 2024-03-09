@@ -10,25 +10,35 @@ const classSchema = new mongoose.Schema({
         days: [{
             type: String,
             enum: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
+            required: true
         }],
         from: {
-            type: Date,
+            type: String,
+            required: true
         },
         to: {
-            type: Date,
+            type: String,
+            required: true
         }
     },
     link: {
         type: String,
+        required: true
     },
     status: {
         type: String,
         enum: ['upcoming', 'live', 'completed'],
-        default: 'upcoming'
+        default: 'upcoming',
     },
     createdAt: {
         type: Date,
-        default: Date.now
+        default: Date.now,
+        required: true
+    },
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
     },
     updatedAt: {
         type: Date,

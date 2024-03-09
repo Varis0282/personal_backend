@@ -13,6 +13,8 @@ const Class = require('../models/classModel');
 router.get('/users', adminResources, async (req, res) => {
     try {
         const users = await User.find();
+        // not send user password
+        users.forEach(u => u.password = undefined);
         res.status(200).json({ users: users, success: true });
     } catch (error) {
         res.status(500).json({ message: error.message, success: false });
@@ -196,18 +198,24 @@ router.delete('/courses/:id', adminResources, async (req, res) => {
 
 // add class in a class model by admin only and then save it's id in course model
 router.post('/courses/:id/class', adminResources, async (req, res) => {
-    const { course, timings, link, status, updatedBy, updateType } = req.body;
+    const { timings, link, status } = req.body;
+    if (!timings || !link || !status) {
+        return res.status(401).json({ message: "Enter all required feilds", success: false });
+    }
     try {
+        const courseExists = await Course.findById(req.params.id);
+        if (!courseExists) {
+            return res.status(404).json({ message: "Course not found", success: false });
+        }
         const newClass = new Class({
-            course,
+            course: req.params.id,
             timings,
             link,
             status,
-            updatedBy,
-            updateType
+            createdAt: Date.now(),
+            createdBy: req.admin._id,
         });
         await newClass.save();
-        const courseExists = await Course.findById(req.params.id);
         courseExists.classes.push(newClass._id);
         await courseExists.save();
         res.status(201).json({
@@ -215,6 +223,7 @@ router.post('/courses/:id/class', adminResources, async (req, res) => {
             data: newClass
         });
     } catch (error) {
+        console.log(error);
         res.status(500).json({
             success: false,
             message: 'Server Error'
@@ -288,7 +297,17 @@ router.put('/class/:id', adminResources, async (req, res) => {
 router.get('/doubts', adminResources, async (req, res) => {
     try {
         const users = await User.find().populate('doubts.course');
-        res.status(200).json({ data: users, success: true });
+        // send only user id, name, email, phone, doubts
+        const data = users.map(u => {
+            return {
+                id: u._id,
+                name: u.name,
+                email: u.email,
+                phone: u.phone,
+                doubts: u.doubts
+            }
+        });
+        res.status(200).json({ data: data, success: true });
     } catch (error) {
         res.status(500).json({ message: error.message, success: false });
     }

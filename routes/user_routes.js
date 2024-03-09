@@ -11,6 +11,7 @@ const privateResources = require('../middleware/privateResources');
 router.get('/', privateResources, async (req, res) => {
     try {
         const user = await User.findById(req.user._id);
+        user.password = undefined;
         res.status(200).json({ user: user, success: true });
     } catch (error) {
         res.status(500).json({ message: error.message, success: false });
