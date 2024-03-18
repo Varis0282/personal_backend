@@ -26,7 +26,9 @@ app.use('*', (req, res) => {
 
 const get = async () => {
     const result = await fetch('https://personal-backend-dnt0.onrender.com/')
+    const result2 = await fetch('https://mere-personal-guru.onrender.com/')
     console.log(result);
+    console.log(result2);
 }
 
 setInterval(() => {
