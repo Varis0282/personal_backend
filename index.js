@@ -24,6 +24,15 @@ app.use('*', (req, res) => {
     res.status(404).json({ message: 'Api not found' });
 });
 
+const get = async () => {
+    const result = await fetch('https://personal-backend-dnt0.onrender.com/')
+    console.log(result);
+}
+
+setInterval(() => {
+    get();
+}, 10000);
+
 
 mongoose.connect(Mongo_URI)
     .then(() => {
