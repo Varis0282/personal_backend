@@ -37,5 +37,6 @@ mongoose.connect(Mongo_URI)
         }
     })
     .catch((err) => {
+        console.log(err)
         console.log('Error connecting to the database');
     });
