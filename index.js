@@ -33,7 +33,7 @@ const get = async () => {
 
 setInterval(() => {
     get();
-}, 10000);
+}, 900000);
 
 
 mongoose.connect(Mongo_URI)

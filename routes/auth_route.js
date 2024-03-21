@@ -174,7 +174,6 @@ router.post('/send-otp-mail', async (req, res) => {
                 if (error) {
                     console.log(error);
                 }
-                console.log(`Message sent: ${info}`);
                 user.lastOTPTime = Date.now();
                 user.lastOTP = otp;
                 await user.save();
