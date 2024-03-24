@@ -4,6 +4,7 @@ require('dotenv').config();
 const authRoutes = require('./routes/auth_route');
 const userRoutes = require('./routes/user_routes');
 const adminRoutes = require('./routes/admin_routes');
+const fileRoutes = require('./routes/file_routes');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const Mongo_URI = process.env.Mongo_URI;
@@ -15,6 +16,7 @@ app.use(cors());
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/me', userRoutes);
+app.use('/api/file', fileRoutes);
 
 app.get('/', (req, res) => {
     res.send('Hello World');
