@@ -9,9 +9,17 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const Mongo_URI = process.env.Mongo_URI;
 const port = process.env.PORT;
+const http = require('http');
+const socketIo = require('socket.io');
+const server = http.createServer(app);
+const io = socketIo(server);
+const morgan = require('morgan');
 
 app.use(express.json());
 app.use(cors());
+
+// Use morgan middleware with custom format
+app.use(morgan('combined'));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
